@@ -7,7 +7,7 @@
   ;; - http://www.chris-granger.com/projects/cljs/
   ;; - https://github.com/shaunxcode/clojurescript-ecosystem/wiki/libraries 
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2173"]
+                 [org.clojure/clojurescript "0.0-2202"]
                  
                  ;; Server, routing
                  [http-kit/http-kit "2.1.16"]
@@ -22,9 +22,12 @@
                  ;; Websockets + core.async
                  [jarohen/chord "0.3.1"]
 
+                 ;; HTTP client
+                 [clj-http/clj-http "0.9.1"]
+
                  ;; Middleware
                  [ring/ring-devel "1.1.8"]
-                 [ring/ring-json "0.2.0"]]
+                 [ring/ring-json "0.3.1"]]
 
   :plugins [[lein-cljsbuild "1.0.2"]]
 
