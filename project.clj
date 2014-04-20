@@ -43,5 +43,5 @@
               :compiler {
                 :output-to "resources/public/javascripts/lib.js"
                 :output-dir "resources/public/javascripts"
-                :optimizations :whitespace
-                :source-map "resources/public/javascripts/lib.js.map"}}]})
+                :optimizations :none
+                :source-map true}}]})
