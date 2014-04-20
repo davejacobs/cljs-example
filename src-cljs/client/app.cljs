@@ -19,15 +19,7 @@
  
 (defn init! []
   (enable-console-print!)
-  ; (repl/connect "http://localhost:9000/repl")
-
-  ;; See https://github.com/cemerick/austin/blob/master/browser-connected-repl-sample/README.md
-  ;; for a convoluted explanation of WTF this is doing
-  ; (def repl-env (reset! cemerick.austin.repls/browser-repl-env
-                        ; (cemerick.austin/repl-env)))
-
-  (dom/append! (dom/xpath "//body") "<script>Hello world!</script>"))
-
+  (repl/connect "http://localhost:9000/repl"))
 
 (defn connect-to-data-source! []
   (go

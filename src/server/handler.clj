@@ -8,8 +8,7 @@
             [compojure.route :as route]
             [org.httpkit.server :refer [run-server]]
             [chord.http-kit :refer [with-channel]]
-            [net.cgrand.enlive-html :as enlive]
-            [cemerick.austin.repls :refer [browser-connected-repl-js]]))
+            [net.cgrand.enlive-html :as enlive]))
 
 (defn websocket-handler [request]
   ;; This is a Chord wrapper for http-kit's with-channel macro

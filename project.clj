@@ -3,12 +3,7 @@
   :url "http://example.com"
 
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 ; [org.clojure/clojurescript "0.0-2173"]
-
-                 ;; Until the issue mentioned below is fixed, use this version
-                 ;; when trying out Austin REPL:
-                 ;; https://github.com/cemerick/austin#installation
-                 [org.clojure/clojurescript "0.0-2156"]
+                 [org.clojure/clojurescript "0.0-2173"]
                  
                  ;; Server, routing
                  [http-kit/http-kit "2.1.16"]
@@ -30,10 +25,6 @@
 
   :plugins [[lein-cljsbuild "1.0.2"]]
   :aliases {"serve" ["run" "-m" "server.handler"]}
-
-  ;; To use the Austin REPL:
-  :profiles {:dev {; :repl-options {:init-ns server.repl}
-                   :plugins [[com.cemerick/austin "0.1.4"]]}}
 
   :source-paths ["src" "src-cljs"]
   :resource-paths ["resources"]
