@@ -7,8 +7,7 @@
             [compojure.handler :refer [site]]
             [compojure.route :as route]
             [org.httpkit.server :refer [run-server]]
-            [chord.http-kit :refer [with-channel]]
-            [net.cgrand.enlive-html :as enlive]))
+            [chord.http-kit :refer [with-channel]]))
 
 (defn websocket-handler [request]
   ;; This is a Chord wrapper for http-kit's with-channel macro
@@ -23,14 +22,11 @@
       (doseq [x (range 100)]
         (>! ws-ch (str "Spontaneous data " x))))))
 
-(enlive/deftemplate index
-  (io/resource "public/index.html") []
-  [:body] (enlive/append
-            (enlive/html [:script {:src (browser-connected-repl-js)} ])))
-
 (defroutes all-routes
   (GET "/data" {:as request} (websocket-handler request)) 
-  (GET "/" [] (index))
+  (GET "/" [] 
+    (response/file-response "index.html" 
+                            {:root "public"}))
 
   (route/resources "/" {:root "public"
                         :mime-types {:ttf "font/truetype"
@@ -39,6 +35,8 @@
   (route/not-found "<p>Page not found.</p>"))
 
 (defn -main [& args]
+  ;; Wrap the handler in any relevant middlware before
+  ;; loading it into the Netty server
   (let [handler (-> (site all-routes)
                   reload/wrap-reload)
         server (run-server handler {:port 8080})]
@@ -49,5 +47,4 @@
                            (println "Server is shutting down")
                            (server))))
 
-    (println "Server is up!")
-    server))
+    (println "Server is up!")))

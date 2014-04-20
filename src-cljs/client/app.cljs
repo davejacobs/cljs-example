@@ -6,6 +6,8 @@
             [domina :as dom])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
+;; The next three forms are typical boilerplate if you're not
+;; using a framework/library
 (def application-state (atom []))
  
 (defn render [old-state new-state]
