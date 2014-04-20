@@ -35,7 +35,7 @@
         (let [next-queue-item (<! ws)
               message (next-queue-item :message)]
           (js/console.log message)
-          (swap! application-state #(conj % message))))))
+          (swap! application-state conj % message)))))
   (js/console.log "Go block is all registered"))
 
 (init!)
