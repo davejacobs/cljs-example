@@ -1,6 +1,6 @@
-(defproject example "0.1.0"
-  :description "This is an example"
-  :url "http://example.com"
+(defproject cljs-example "0.1.0"
+  :description "This is an example of a Clojurescript app"
+  :url "http://cljs-example.com"
 
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2173"]
