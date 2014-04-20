@@ -20,7 +20,7 @@
 
     (go
       (doseq [x (range 100)]
-        (>! ws-ch (str "Spontaneous data " x))))))
+        (>! ws-ch (range x))))))
 
 (defroutes all-routes
   (GET "/data" {:as request} (websocket-handler request)) 
