@@ -22,21 +22,16 @@
 (defn init! []
   (enable-console-print!)
   (repl/connect "http://localhost:9000/repl"))
-
+ 
 (defn connect-to-data-source! []
   (go
     (let [ws (<! (ws-ch "ws://localhost:8080/data"))]
-      ;; Try out ping
-      (>! ws "Server, server, wherefore art thou, server?")
-      (js/console.log (:message (<! ws)))
-
       ;; Read all data off of queue
       (while true
         (let [next-queue-item (<! ws)
               message (next-queue-item :message)]
-          (js/console.log message)
-          (swap! application-state conj % message)))))
-  (js/console.log "Go block is all registered"))
+          (swap! application-state concat message)))))
+  (js/console.log "Go block is registered"))
 
 (init!)
 (connect-to-data-source!)
