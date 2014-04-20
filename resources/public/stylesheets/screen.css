@@ -1,3 +1,12 @@
-ul {
+body * {
+  font-family: "Ubuntu Mono";
+}
 
+ul {
+  list-style-type: none;
+}
+
+ul li {
+  display: inline-block;
+  padding: 10px;
 }
