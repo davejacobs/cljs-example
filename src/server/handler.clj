@@ -26,7 +26,7 @@
   (GET "/data" {:as request} (websocket-handler request)) 
   (GET "/" [] 
     (response/file-response "index.html" 
-                            {:root "public"}))
+                            {:root "resources/public"}))
 
   (route/resources "/" {:root "public"
                         :mime-types {:ttf "font/truetype"
