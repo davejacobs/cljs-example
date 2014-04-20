@@ -7,7 +7,12 @@
   ;; - http://www.chris-granger.com/projects/cljs/
   ;; - https://github.com/shaunxcode/clojurescript-ecosystem/wiki/libraries 
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2202"]
+                 [org.clojure/core.incubator "0.1.3"]
+                 [org.clojure/clojurescript "0.0-2173"]
+
+                 ;; This version of Clojurescript seems to compile
+                 ;; very slowly -- requires cljsbuild 1.0.3
+                 ; [org.clojure/clojurescript "0.0-2202"]
                  
                  ;; Server, routing
                  [http-kit/http-kit "2.1.16"]
