@@ -1,9 +1,9 @@
 (ns client.app
   (:require [clojure.string :refer [join]]
             [clojure.browser.repl :as repl]
-            [domina :as dom]
             [cljs.core.async :refer [<! >! put! close!]]
-            [chord.client :refer [ws-ch]])
+            [chord.client :refer [ws-ch]]
+            [domina :as dom])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (def application-state (atom []))
@@ -19,7 +19,15 @@
  
 (defn init! []
   (enable-console-print!)
-  (repl/connect "http://localhost:9000/repl"))
+  ; (repl/connect "http://localhost:9000/repl")
+
+  ;; See https://github.com/cemerick/austin/blob/master/browser-connected-repl-sample/README.md
+  ;; for a convoluted explanation of WTF this is doing
+  ; (def repl-env (reset! cemerick.austin.repls/browser-repl-env
+                        ; (cemerick.austin/repl-env)))
+
+  (dom/append! (dom/xpath "//body") "<script>Hello world!</script>"))
+
 
 (defn connect-to-data-source! []
   (go

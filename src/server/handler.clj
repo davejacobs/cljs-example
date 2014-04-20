@@ -1,52 +1,37 @@
 (ns server.handler
-  (:require [clojure.core.async :refer [<! >! put! close! go]]
+  (:require [clojure.java.io :as io]
+            [clojure.core.async :refer [<! >! put! close! go]]
             [ring.middleware.reload :as reload]
             [ring.util.response :as response]
             [compojure.core :refer :all]
             [compojure.handler :refer [site]]
             [compojure.route :as route]
             [org.httpkit.server :refer [run-server]]
-            [chord.http-kit :refer [with-channel]]))
+            [chord.http-kit :refer [with-channel]]
+            [net.cgrand.enlive-html :as enlive]
+            [cemerick.austin.repls :refer [browser-connected-repl-js]]))
 
 (defn websocket-handler [request]
-  ;; This is a Chord wrapper for http-kit
+  ;; This is a Chord wrapper for http-kit's with-channel macro
   (with-channel request ws-ch
     (go
+      ;; OMG a while loop
       (while true
         (let [{:keys [message]} (<! ws-ch)]
-          (>! ws-ch (str "[message received] " message))
-          #_(close! ws-ch))))
+          (>! ws-ch (str "[message received] " message)))))
 
     (go
       (doseq [x (range 100)]
-        (>! ws-ch (str "Unrequested data " x))))
+        (>! ws-ch (str "Spontaneous data " x))))))
 
-    #_(on-close channel
-      (fn [status]
-        (println "channel closed")))
-
-    #_(if (websocket? channel)
-      (println "WebSocket channel")
-      (println "HTTP channel"))
-
-    #_(on-receive channel
-      (fn [data]
-        ;; An optional param can pass to send!:
-        ;; close-after-send? When unspecified,
-        ;; `close-after-send?` defaults to true for HTTP
-        ;; channels and false for WebSocket.
-        ;; (send! channel data close-after-send?)
-        ;;
-        ;; data is sent directly to the client
-        (doseq [x (range 10)]
-         (send! channel "[1 2 3]"))
-         ))))
+(enlive/deftemplate index
+  (io/resource "public/index.html") []
+  [:body] (enlive/append
+            (enlive/html [:script {:src (browser-connected-repl-js)} ])))
 
 (defroutes all-routes
   (GET "/data" {:as request} (websocket-handler request)) 
-  (GET "/" []
-    (response/file-response "index.html"
-                            {:root "resources/public"}))
+  (GET "/" [] (index))
 
   (route/resources "/" {:root "public"
                         :mime-types {:ttf "font/truetype"

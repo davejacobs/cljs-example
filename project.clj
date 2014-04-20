@@ -15,7 +15,8 @@
                  [compojure/compojure "1.1.5"]
 
                  ;; DOM manipulation
-                 [domina "1.0.2"]
+                 [enlive/enlive "1.1.5"]
+                 [domina/domina "1.0.2"]
 
                  ;; Async channels
                  [org.clojure/core.async "0.1.278.0-76b25b-alpha"]
@@ -31,7 +32,7 @@
   :aliases {"serve" ["run" "-m" "server.handler"]}
 
   ;; To use the Austin REPL:
-  :profiles {:dev {:repl-options {:init-ns client.app}
+  :profiles {:dev {; :repl-options {:init-ns server.repl}
                    :plugins [[com.cemerick/austin "0.1.4"]]}}
 
   :source-paths ["src" "src-cljs"]
