@@ -1,5 +1,7 @@
 Clojurescript example
 =====================
 
-lein cljsbuild auto
-lein serve
+Run the code:
+
+    lein cljsbuild auto
+    lein serve
