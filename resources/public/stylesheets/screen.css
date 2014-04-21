@@ -6,23 +6,32 @@ ul {
   list-style-type: none;
 }
 
-ul li {
+li {
   display: inline-block;
-  padding: 5px 10px;
+  text-align: center;
+  width: 20px;
+  line-height: 20px;
+  margin-left: 5px;
+  margin-top: 5px;
+  border-radius: 10px;
 }
 
 .A {
   color: purple;
+  border: solid 1px purple;
 }
 
 .C {
   color: red;
+  border: solid 1px red;
 }
 
 .G {
   color: blue;
+  border: solid 1px blue;
 }
 
 .T {
   color: green;
+  border: solid 1px green;
 }
