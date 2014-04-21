@@ -15,24 +15,29 @@
     (drop (* page-size n))
     (take page-size)))
 
-(def gene-data 
-  (services/fetch-gene-data "homo_sapiens" "X" 1000000 1000))
+; (def gene-data 
+  ; (services/fetch-gene-data "homo_sapiens" "X" 1000000 1000))
 
 (defn websocket-handler [request]
   ;; This is a Chord wrapper for http-kit's with-channel macro
   (with-channel request ws-ch
-    ; (go
-      ; ;; OMG a while loop
-      ; (while true
-        ; (let [{:keys [message]} (<! ws-ch)]
-          ; (>! ws-ch (str "[message received] " message)))))
-
     (go
-      (doseq [x (range (count gene-data))]
-        (let [gene-slice (nth-page gene-data x 1)] 
-          ;; Throttle writing speed to once every 50 ms
-          (<! (timeout 50))
-          (>! ws-ch gene-slice))))))
+      ;; OMG a while loop
+      (while true
+        (let [{:keys [message]} (<! ws-ch)
+              {:keys [species-id chromosome start-pos len]} message
+              gene-data (services/fetch-gene-data
+                          species-id
+                          chromosome 
+                          start-pos
+                          len)
+              gene-sequence (gene-data :sequence)
+              buffer-size 1]
+          (doseq [x (range (/ (count gene-sequence) buffer-size))]
+            (let [gene-slice (nth-page gene-sequence x buffer-size)] 
+              ;; Throttle writing speed to once every 50 ms
+              (<! (timeout 50))
+              (>! ws-ch gene-slice))))))))
 
 (defroutes all-routes
   (GET "/data" {:as request}
