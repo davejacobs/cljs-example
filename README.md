@@ -11,6 +11,6 @@ Notes:
 - Leiningen likes to keep track of state with dotfiles.
   You may want to add the following to your `~/.gitignore`.
 
-    .lein-repl-history
-    .repl
-    target
+        .lein-repl-history
+        .repl
+        target
