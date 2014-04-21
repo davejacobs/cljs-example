@@ -8,5 +8,21 @@ ul {
 
 ul li {
   display: inline-block;
-  padding: 10px;
+  padding: 5px 10px;
+}
+
+.A {
+  color: purple;
+}
+
+.C {
+  color: red;
+}
+
+.G {
+  color: blue;
+}
+
+.T {
+  color: green;
 }

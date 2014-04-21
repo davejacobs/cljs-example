@@ -10,10 +10,15 @@
 ;; using a framework/library
 (def application-state (atom []))
  
+;; Currently assumes only adding to vector -- should be much more
+;; abstract
 (defn render [old-state new-state]
-  (dom/destroy-children! (dom/by-id "content"))
-  (dom/append! (dom/by-id "content")
-               (join "" (map #(str "<li>" % "</li>") new-state))))
+  ; (dom/destroy-children! (dom/by-id "content"))
+  (let [state-diff (drop (count old-state) new-state)]
+    (dom/append! (dom/by-id "content")
+                 (join "" (map #(str "<li class='" % "'>"
+                                     %
+                                     "</li>") state-diff)))))
  
 (add-watch application-state :app-watcher
   (fn [key reference old-state new-state]
