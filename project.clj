@@ -20,6 +20,7 @@
 
                  ;; DOM manipulation
                  [prismatic/dommy "0.1.2"]
+                 [jayq "2.5.0"]
 
                  ;; Async channels
                  [org.clojure/core.async "0.1.278.0-76b25b-alpha"]
@@ -46,8 +47,10 @@
   ;; Only point to Clojurescript directory in Clojurescript source paths
   :cljsbuild { 
     :builds [{:source-paths ["src-cljs"]
-              :compiler {
-                :output-to "resources/public/javascripts/lib.js"
-                :output-dir "resources/public/javascripts"
-                :optimizations :none
-                :source-map true}}]})
+              :compiler 
+              {:output-to "resources/public/javascripts/lib.js"
+               :output-dir "resources/public/javascripts"
+               :optimizations :none
+               :source-map true
+               :libs ["resources/components/jquery/dist/jquery.js"
+                      "resources/components/jquery-cookie/jquery.cookie.js"]}}]})
