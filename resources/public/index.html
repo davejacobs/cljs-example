@@ -4,11 +4,24 @@
   <head>
     <link rel="stylesheet" href="/stylesheets/reset.css" />
     <link rel="stylesheet" href="/stylesheets/screen.css" />
+    <link rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.css" />
   </head>
 
   <body>
-    <ul class="sequence">
-    </ul>
+    <section class="first-panel hero">
+      <ul class="sequence">
+      </ul>
+    </section>
+
+    <section class="second-panel">
+      <form>
+        <input type="text" name="species-id" placeholder="Species" />
+        <input type="text" name="chromosome" placeholder="Chromosome name" />
+        <input type="range" name="start" />
+        <input type="range" name="length" />
+        <button type="button" class="btn btn-primary btn-lg">Fetch sequence</button>
+      </form>
+    </section>
 
     <script src="/javascripts/goog/base.js"></script>
     <script src="/javascripts/lib.js"></script>

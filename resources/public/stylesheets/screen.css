@@ -1,19 +1,55 @@
-body * {
-  font-family: "Ubuntu Mono";
-}
-
 ul {
   list-style-type: none;
 }
 
 li {
   display: inline-block;
+  font-family: "Ubuntu Mono";
   text-align: center;
   width: 20px;
   line-height: 20px;
   margin-left: 5px;
   margin-top: 5px;
   border-radius: 10px;
+}
+
+body {
+  display: flex;
+}
+
+.first-panel {
+  flex: 1 1;
+}
+
+.second-panel {
+  flex: 1 1;
+  display: flex;
+}
+
+.second-panel form {
+  flex: 1 1;
+  padding: 10px;
+}
+
+input {
+  display: block;
+}
+
+input[type=text] {
+  font-family: ScalaSansPro, Ubuntu, Helvetica;
+  font-size: 120%;
+  padding: 5px 10px;
+  border: solid 1px #aaa;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+input[type=range] {
+}
+
+input+input {
+  margin-top: 10px;
 }
 
 .A {
