@@ -1,34 +1,29 @@
 (ns client.app
-  (:require [clojure.string :refer [join]]
+  (:require [client.helpers :as h]
+            [clojure.string :refer [join]]
             [clojure.browser.repl :as repl]
             [cljs.core.async :refer [<! >! put! close!]]
             [chord.client :refer [ws-ch]]
-            [dommy.core :as dom])
+            [jayq.core :refer [$ css html] :as jq])
   (:require-macros [cljs.core.async.macros :refer [go]]
-                   [dommy.macros :refer [deftemplate node sel sel1]]
-                   [clojure.core.strint :refer [<<]]))
+                   [clojure.core.strint :refer [<<]]
+                   [jayq.macros :refer [ready]]))
 
 (def application-state 
   (atom {:sequence []}))
 
-(deftemplate nucleotide [letter]
-  [:li {:class letter} letter])
+(defn nucleotide [base]
+  (<< "<li class='~{base}'>~{base}</li>"))
 
 (defn update-sequence! [selector old-seq new-seq]
   (let [seq-diff (drop (count old-seq) new-seq)]
-    (dom/append! (sel1 ".sequence")
-                 (map nucleotide seq-diff))))
+    (-> ($ ".sequence")
+      (jq/append (join "" (map nucleotide seq-diff))))))
 
 (defn render [old-state new-state]
   (let [old-seq (old-state :sequence)
         new-seq (new-state :sequence)]
     (update-sequence! ".sequence" old-seq new-seq)))
- 
-(defn init! []
-  (enable-console-print!)
-  (add-watch application-state :app-watcher
-             (fn [key reference old-state new-state]
-               (render old-state new-state))))
  
 (defn start-loading-data! [species-id chromosome start-pos len]
   (go
@@ -42,25 +37,28 @@
         (let [next-queue-item (<! ws)
               message (next-queue-item :message)]
           (swap! application-state 
-                 update-in [:sequence] #(concat % message))))))
-  (js/console.log "Go block is registered"))
-
-(init!)
-
-(defn form-value-for-name [form-element name]
-  (-> form-element 
-    (sel1 (<< "[name=~{name}]"))
-    (#(.-value %))))
+                 update-in [:sequence] #(concat % message)))))))
 
 (defn on-submit-form [e]
   (.preventDefault e)
   (let [form (.-currentTarget e)
-        species-id (form-value-for-name form "species-id")
-        chromosome (form-value-for-name form "chromosome")
-        start-pos (form-value-for-name form "start-pos")
-        len (form-value-for-name form "len")]
+        species-id (h/form-value-for-name form "species-id")
+        chromosome (h/form-value-for-name form "chromosome")
+        start-pos (int (h/form-value-for-name form "start-pos"))
+        len (int (h/form-value-for-name form "len"))]
+    (h/save-form-to-cookie! form ["species-id" "chromosome" "start-pos" "len"])
     (start-loading-data! species-id chromosome start-pos len)))
 
-(dom/listen! 
-  (sel1 :form)
-  :submit on-submit-form)
+(defn bind-events! []
+  (-> ($ "form")
+    (jq/bind :submit on-submit-form)))
+
+(defn init! []
+  (enable-console-print!)
+  (h/load-form-from-cookie! ($ "form") ["species-id" "chromosome" "start-pos" "len"])
+  (add-watch application-state :app-watcher
+             (fn [key reference old-state new-state]
+               (render old-state new-state)))
+  (bind-events!))
+
+(ready (init!))
