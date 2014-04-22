@@ -45,7 +45,11 @@ input[type=text] {
   margin-right: auto;
 }
 
-input[type=range] {
+input[type=submit] {
+  font-size: 150%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
 input+input {

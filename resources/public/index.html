@@ -17,9 +17,14 @@
       <form>
         <input type="text" name="species-id" placeholder="Species" />
         <input type="text" name="chromosome" placeholder="Chromosome name" />
-        <input type="range" name="start" />
-        <input type="range" name="length" />
-        <button type="button" class="btn btn-primary btn-lg">Fetch sequence</button>
+        <input type="text" name="start-pos" placeholder="Start position" />
+        <input type="text" name="len" placeholder="Sequence length" />
+
+        <!-- <input type="range" name="start-pos" /> -->
+        <!-- <input type="range" name="len" /> -->
+
+        <input type="submit" class="btn btn-primary btn-lg"
+               value="Fetch the sequence" />
       </form>
     </section>
 

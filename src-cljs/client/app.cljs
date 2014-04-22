@@ -5,40 +5,62 @@
             [chord.client :refer [ws-ch]]
             [dommy.core :as dom])
   (:require-macros [cljs.core.async.macros :refer [go]]
-                   [dommy.macros :refer [node sel sel1]]))
+                   [dommy.macros :refer [deftemplate node sel sel1]]
+                   [clojure.core.strint :refer [<<]]))
 
-;; The next three forms are typical boilerplate if you're not
-;; using a framework/library
-(def application-state (atom {:sequence []}))
- 
-;; Currently assumes only adding to vector -- break down into smaller functions
+(def application-state 
+  (atom {:sequence []}))
+
+(deftemplate nucleotide [letter]
+  [:li {:class letter} letter])
+
+(defn update-sequence! [selector old-seq new-seq]
+  (let [seq-diff (drop (count old-seq) new-seq)]
+    (dom/append! (sel1 ".sequence")
+                 (map nucleotide seq-diff))))
+
 (defn render [old-state new-state]
   (let [old-seq (old-state :sequence)
-        new-seq (new-state :sequence)
-        seq-diff (drop (count old-seq) new-seq)]
-    (dom/append! (sel1 ".sequence")
-                 (map #(node [:li {:class %} %]) seq-diff))))
- 
-(add-watch application-state :app-watcher
-  (fn [key reference old-state new-state]
-    (render old-state new-state)))
+        new-seq (new-state :sequence)]
+    (update-sequence! ".sequence" old-seq new-seq)))
  
 (defn init! []
-  (enable-console-print!))
+  (enable-console-print!)
+  (add-watch application-state :app-watcher
+             (fn [key reference old-state new-state]
+               (render old-state new-state))))
  
-(defn connect-to-data-source! []
+(defn start-loading-data! [species-id chromosome start-pos len]
   (go
     (let [ws (<! (ws-ch "ws://localhost:8080/data"))]
-      (>! ws {:species "homo_sapiens"
-              :chromosome "X"
-              :start-pos 1000000
-              :len 1000})
+      (>! ws {:species-id species-id
+              :chromosome chromosome
+              :start-pos start-pos
+              :len len})
       ;; Read all data off of queue
       (while true
         (let [next-queue-item (<! ws)
               message (next-queue-item :message)]
-          (swap! application-state update-in [:sequence] #(concat % message))))))
+          (swap! application-state 
+                 update-in [:sequence] #(concat % message))))))
   (js/console.log "Go block is registered"))
 
 (init!)
-(connect-to-data-source!)
+
+(defn form-value-for-name [form-element name]
+  (-> form-element 
+    (sel1 (<< "[name=~{name}]"))
+    (#(.-value %))))
+
+(defn on-submit-form [e]
+  (.preventDefault e)
+  (let [form (.-currentTarget e)
+        species-id (form-value-for-name form "species-id")
+        chromosome (form-value-for-name form "chromosome")
+        start-pos (form-value-for-name form "start-pos")
+        len (form-value-for-name form "len")]
+    (start-loading-data! species-id chromosome start-pos len)))
+
+(dom/listen! 
+  (sel1 :form)
+  :submit on-submit-form)
