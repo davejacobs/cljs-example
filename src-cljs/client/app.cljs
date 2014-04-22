@@ -3,8 +3,9 @@
             [clojure.browser.repl :as repl]
             [cljs.core.async :refer [<! >! put! close!]]
             [chord.client :refer [ws-ch]]
-            [domina :as dom])
-  (:require-macros [cljs.core.async.macros :refer [go]]))
+            [dommy.core :as dom])
+  (:require-macros [cljs.core.async.macros :refer [go]]
+                   [dommy.macros :refer [node sel sel1]]))
 
 ;; The next three forms are typical boilerplate if you're not
 ;; using a framework/library
@@ -15,10 +16,8 @@
   (let [old-seq (old-state :sequence)
         new-seq (new-state :sequence)
         seq-diff (drop (count old-seq) new-seq)]
-    (dom/append! (dom/by-id "sequence")
-                 (join "" (map #(str "<li class='" % "'>"
-                                     %
-                                     "</li>") seq-diff)))))
+    (dom/append! (sel1 ".sequence")
+                 (map #(node [:li {:class %} %]) seq-diff))))
  
 (add-watch application-state :app-watcher
   (fn [key reference old-state new-state]

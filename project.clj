@@ -19,7 +19,7 @@
                  [compojure/compojure "1.1.5"]
 
                  ;; DOM manipulation
-                 [domina/domina "1.0.2"]
+                 [prismatic/dommy "0.1.2"]
 
                  ;; Async channels
                  [org.clojure/core.async "0.1.278.0-76b25b-alpha"]
