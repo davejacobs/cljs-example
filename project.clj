@@ -8,11 +8,11 @@
   ;; - https://github.com/shaunxcode/clojurescript-ecosystem/wiki/libraries 
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/core.incubator "0.1.3"]
-                 [org.clojure/clojurescript "0.0-2173"]
+                 ; [org.clojure/clojurescript "0.0-2173"]
 
                  ;; This version of Clojurescript seems to compile
                  ;; very slowly -- requires cljsbuild 1.0.3
-                 ; [org.clojure/clojurescript "0.0-2202"]
+                 [org.clojure/clojurescript "0.0-2202"]
                  
                  ;; Server, routing
                  [http-kit/http-kit "2.1.16"]
@@ -34,7 +34,7 @@
                  [ring/ring-devel "1.1.8"]
                  [ring/ring-json "0.3.1"]]
 
-  :plugins [[lein-cljsbuild "1.0.2"]]
+  :plugins [[lein-cljsbuild "1.0.3"]]
 
   ;; `lein serve` runs the -main function in the namespace server.handler
   :aliases {"serve" ["run" "-m" "server.handler"]}
