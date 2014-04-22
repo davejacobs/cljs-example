@@ -3,6 +3,8 @@ Clojurescript example
 
 Run the code:
 
+    npm install -g bower
+    bower install
     lein cljsbuild auto
     lein serve
 
