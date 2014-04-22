@@ -15,14 +15,10 @@
 
     <section class="second-panel">
       <form>
-        <input type="text" name="species-id" placeholder="Species" />
-        <input type="text" name="chromosome" placeholder="Chromosome name" />
-        <input type="text" name="start-pos" placeholder="Start position" />
-        <input type="text" name="len" placeholder="Sequence length" />
-
-        <!-- <input type="range" name="start-pos" /> -->
-        <!-- <input type="range" name="len" /> -->
-
+        <input type="text" name="species-id" placeholder="Species (e.g., homo_sapiens)" />
+        <input type="text" name="chromosome" placeholder="Chromosome name (e.g., X)" />
+        <input type="text" name="start-pos" placeholder="Start position (e.g., 1000000)" />
+        <input type="text" name="len" placeholder="Sequence length (e.g., 1000)" />
         <input type="submit" class="btn btn-primary btn-lg"
                value="Fetch the sequence" />
       </form>
@@ -32,6 +28,7 @@
     <script src="/components/jquery-cookie/jquery.cookie.js"></script>
     <script src="/javascripts/goog/base.js"></script>
     <script src="/javascripts/lib.js"></script>
+
     <script>
       goog.require("client.app");
     </script>
