@@ -1,5 +1,6 @@
 (ns client.helpers
-  (:require [jayq.core :refer [$] :as jq]))
+  (:require [jayq.core :refer [$] :as jq])
+  (:require-macros [clojure.core.strint :refer [<<]]))
 
 (defn set-cookie! [k v]
   ($.cookie k v))
