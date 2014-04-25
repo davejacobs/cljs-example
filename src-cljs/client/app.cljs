@@ -9,38 +9,59 @@
                    [clojure.core.strint :refer [<<]]
                    [jayq.macros :refer [ready]]))
 
+(def counter
+  (atom 0))
+
 (def application-state 
-  (atom {:sequence []}))
+  (atom {:sequences {}}))
 
 (defn nucleotide [base]
   (<< "<li class='~{base}'>~{base}</li>"))
 
-(defn update-sequence! [selector old-seq new-seq]
-  (let [seq-diff (drop (count old-seq) new-seq)]
-    (-> ($ ".sequence")
-      (jq/append (join "" (map nucleotide seq-diff))))))
+(defn nucleotides [sequence]
+  (apply str (map nucleotide sequence)))
 
-(defn render [old-state new-state]
-  (let [old-seq (old-state :sequence)
-        new-seq (new-state :sequence)]
-    (update-sequence! ".sequence" old-seq new-seq)))
+(defn insert-sequence! [identifier new-seq]
+  (let [identifier-name (name identifier)
+        new-dom-elem (-> ($ (<< "<ul class='~{identifier-name}'>"))
+                       (jq/append (nucleotides new-seq)))]
+    (-> ($ ".sequences")
+      (jq/append new-dom-elem))))
+
+(defn update-sequence! [identifier old-seq new-seq]
+  (let [identifier-name (name identifier)
+        seq-diff (drop (count old-seq) new-seq)]
+    (-> ($ (<< ".~{identifier-name}"))
+      (jq/append (nucleotides seq-diff)))))
+
+(defn render! [old-state new-state]
+  (doseq [[identifier new-seq] (new-state :sequences)]
+    (if-let [old-seq ((old-state :sequences) identifier)]  
+      (update-sequence! identifier old-seq new-seq)
+      (insert-sequence! identifier new-seq))))
  
 (defn start-loading-data! [species-id chromosome start-pos len]
-  (go
-    (let [ws (<! (ws-ch "ws://localhost:8080/data"))]
-      (>! ws {:species-id species-id
-              :chromosome chromosome
-              :start-pos start-pos
-              :len len})
-      ;; Read all data off of queue
-      (while true
-        (let [next-queue-item (<! ws)
-              message (next-queue-item :message)]
-          (swap! application-state 
-                 update-in [:sequence] #(concat % message)))))))
+  ;; Bump the counter
+  (swap! counter inc)
+  (let [identifier (keyword (str "sequence-" @counter))]
+    ;; Allot a new place in state for this sequence
+    (swap! application-state update-in [:sequences] #(assoc % identifier [])) 
+    ;; Request the data
+    (go
+      (let [ws (<! (ws-ch "ws://localhost:8080/data"))]
+        (>! ws {:species-id species-id
+                :chromosome chromosome
+                :start-pos start-pos
+                :len len})
+        ;; Read all data off of queue
+        (while true
+          (let [next-queue-item (<! ws)
+                message (next-queue-item :message)]
+            (swap! application-state 
+                   update-in [:sequences identifier] #(concat % message))))))))
 
 (defn on-submit-form [e]
-  (.preventDefault e)
+  (jq/prevent e)
   (let [form (.-currentTarget e)
         species-id (h/form-value-for-name form "species-id")
         chromosome (h/form-value-for-name form "chromosome")
@@ -55,10 +76,11 @@
 
 (defn init! []
   (enable-console-print!)
-  (h/load-form-from-cookie! ($ "form") ["species-id" "chromosome" "start-pos" "len"])
+  (h/load-form-from-cookie! ($ "form")
+                            ["species-id" "chromosome" "start-pos" "len"])
   (add-watch application-state :app-watcher
              (fn [key reference old-state new-state]
-               (render old-state new-state)))
+               (render! old-state new-state)))
   (bind-events!))
 
 (ready (init!))
