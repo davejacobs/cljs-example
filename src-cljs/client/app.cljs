@@ -56,15 +56,13 @@
                    update-in [:sequences identifier] #(concat % message))))))))
 
 (defn start-loading-data-from-form! [form fields]
-  (let [raw-query (for [field fields]
-                    [field (h/form-value-for-name form field)])
-        query (into {} raw-query)]
+  (let [query (h/form->map form fields)]
     (start-loading-data! query)))
 
 (defn on-submit-form [e]
   (jq/prevent e)
   (let [form (.-currentTarget e)
-        fields ["species-id" "chromosome" "start-pos" "len"]]
+        fields [:species-id :chromosome :start-pos :len]]
     (h/save-form-to-cookie! form fields)
     (start-loading-data-from-form! form fields)))
 

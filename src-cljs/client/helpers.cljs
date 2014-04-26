@@ -8,10 +8,17 @@
 (defn get-cookie [k]
   ($.cookie k))
 
+(def input-type-mappings
+  {"text" str
+   "number" int})
+
 (defn form-value-for-name [form-element k]
-  (-> ($ form-element) 
-    (jq/find (<< "[name=~{k}]"))
-    jq/val))
+  (let [input-elem (-> ($ form-element) 
+                     (jq/find (<< "[name=~{k}]")))
+        input-type (jq/attr input-elem "type")
+        input-val (jq/val input-elem)
+        output-type (get input-type-mappings input-type str)]
+    (output-type input-val)))
 
 (defn set-form-value-by-name! [form-element k v]
   (-> ($ form-element) 
