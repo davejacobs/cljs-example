@@ -1,7 +1,5 @@
 (ns client.app
   (:require [client.helpers :as h]
-            [clojure.string :refer [join]]
-            [clojure.browser.repl :as repl]
             [cljs.core.async :refer [<! >! put! close!]]
             [chord.client :refer [ws-ch]]
             [jayq.core :refer [$ css html] :as jq])
@@ -83,4 +81,4 @@
                (render! old-state new-state)))
   (bind-events!))
 
-(ready (init!))
+(jq/document-ready init!)
