@@ -25,10 +25,15 @@
     (jq/find (<< "[name=~{k}]"))
     (jq/val v)))
 
-(defn save-form-to-cookie! [form names]
-  (doseq [name names]
-    (set-cookie! name (form-value-for-name form name))))
+(defn save-form-to-cookie! [form fields]
+  (doseq [field (map name fields)]
+    (set-cookie! field (form-value-for-name form field))))
 
-(defn load-form-from-cookie! [form names] 
-  (doseq [name names]
-    (set-form-value-by-name! form name (get-cookie name))))
+(defn load-form-from-cookie! [form fields] 
+  (doseq [field (map name fields)]
+    (set-form-value-by-name! form field (get-cookie field))))
+
+(defn form->map [form fields]
+  (let [kv-pairs (for [field fields]
+                   [field (form-value-for-name form (name field))])]
+    (into {} kv-pairs)))
