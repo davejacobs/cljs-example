@@ -38,7 +38,7 @@
       (update-sequence! identifier old-seq new-seq)
       (insert-sequence! identifier new-seq))))
  
-(defn start-loading-data! [species-id chromosome start-pos len]
+(defn start-loading-data! [query]
   ;; Bump the counter
   (swap! counter inc)
   (let [identifier (keyword (str "sequence-" @counter))]
@@ -47,10 +47,7 @@
     ;; Request the data
     (go
       (let [ws (<! (ws-ch "ws://localhost:8080/data"))]
-        (>! ws {:species-id species-id
-                :chromosome chromosome
-                :start-pos start-pos
-                :len len})
+        (>! ws query)
         ;; Read all data off of queue
         (while true
           (let [next-queue-item (<! ws)
@@ -58,15 +55,18 @@
             (swap! application-state 
                    update-in [:sequences identifier] #(concat % message))))))))
 
+(defn start-loading-data-from-form! [form fields]
+  (let [raw-query (for [field fields]
+                    [field (h/form-value-for-name form field)])
+        query (into {} raw-query)]
+    (start-loading-data! query)))
+
 (defn on-submit-form [e]
   (jq/prevent e)
   (let [form (.-currentTarget e)
-        species-id (h/form-value-for-name form "species-id")
-        chromosome (h/form-value-for-name form "chromosome")
-        start-pos (int (h/form-value-for-name form "start-pos"))
-        len (int (h/form-value-for-name form "len"))]
-    (h/save-form-to-cookie! form ["species-id" "chromosome" "start-pos" "len"])
-    (start-loading-data! species-id chromosome start-pos len)))
+        fields ["species-id" "chromosome" "start-pos" "len"]]
+    (h/save-form-to-cookie! form fields)
+    (start-loading-data-from-form! form fields)))
 
 (defn bind-events! []
   (-> ($ "form")
