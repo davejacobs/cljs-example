@@ -14,8 +14,7 @@
   (atom 0))
 
 (def application-state 
-  (atom {:sequences {}
-         :selections {}}))
+  (atom {:sequences {}}))
 
 (def reading-state 
   (atom {:sequences {}}))
@@ -62,11 +61,11 @@
     (let [identifier-name (name identifier)
           search-positions (h/find-pos sequence search-sequence) 
           highlight-len (count search-sequence)] 
-      (doseq [initial-pos search-positions]
-        (doseq [distance (range highlight-len)]
-          (-> ($ (<< ".~{identifier-name} > li"))
-            (.eq (+ initial-pos distance))
-            (jq/add-class "highlighted")))))))
+      (doseq [initial-pos search-positions
+              distance (range highlight-len)]
+        (-> ($ (<< ".~{identifier-name} > li"))
+          (.eq (+ initial-pos distance))
+          (jq/add-class "highlighted"))))))
  
 (defn start-loading-data! [query]
   ;; Bump the counter
@@ -123,7 +122,8 @@
   (let [form (.-currentTarget e)
         search-val (h/form-value-for-name form "search-sequence")
         search-seq (seq (upper-case search-val))]
-    (render-search-sequence! search-seq)))
+    (render-search-sequence! search-seq)
+    (-> ($ form) (jq/find "[name=search-sequence]") (jq/val "") (jq/focus))))
 
 (defn on-pause-fetch [e]
   (jq/prevent e)
