@@ -20,7 +20,8 @@
 
                  ;; DOM manipulation
                  [prismatic/dommy "0.1.2"]
-                 [jayq "2.5.0"]
+                 [jayq/jayq "2.5.0"]
+                 [crate/crate "0.2.4"]
 
                  ;; Async channels
                  [org.clojure/core.async "0.1.278.0-76b25b-alpha"]

@@ -13,17 +13,58 @@ li {
   border-radius: 10px;
 }
 
+html, body { 
+  height: 100vh; 
+}
+
 body {
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .first-panel {
   flex: 1 1;
+  display: flex;
+}
+
+.first-panel .sequences {
+  flex: 1 1;
+  display: flex;
+}
+
+.first-panel .sequences .sequence-wrapper {
+  flex: 1 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.first-panel .sequences .sequence-wrapper > ul {
+  flex: 1 1;
+  overflow: scroll;
+  min-height: 0;
+}
+
+.sequences li.highlighted {
+  background-color: #fff;
+  color: #666;
+}
+
+.pause-fetch {
+  display: block;
+  padding: 10px;
+  text-align: center;
+  background-color: #ddd;
+  font-size: 120%;
 }
 
 .second-panel {
   flex: 1 1;
+  flex-direction: column;
   display: flex;
+  background-color: #cddccd;
+  background-image: url(/images/bokeh.jpg);
+  background-size: cover;
 }
 
 .second-panel form {
@@ -31,25 +72,38 @@ body {
   padding: 10px;
 }
 
-input {
-  display: block;
+form.fetch-sequences {
+  overflow-x: scroll;
 }
 
-input[type=text], input[type=number] {
-  font-family: ScalaSansPro, Ubuntu, Helvetica;
-  font-size: 120%;
-  padding: 5px 10px;
-  border: solid 1px #aaa;
-  display: block;
+form.fetch-sequences .flexible-fields {
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
 }
 
-input[type=submit] {
+form.fetch-sequences input[type=submit] {
+  display: block;
+  margin-top: 20px;
   font-size: 150%;
   margin-left: auto;
   margin-right: auto;
-  display: block;
+}
+
+input:focus {
+  outline: none;
+}
+
+input[type=text] {
+  font-family: ScalaSansPro, Ubuntu, Helvetica;
+  font-size: 120%;
+  color: #fff;
+  padding: 5px 10px;
+  border: 0;
+  background-color: transparent;
+  border-bottom: solid 2px #fff;
+  display: inline-block;
+  width: 150px;
 }
 
 input+input {
@@ -57,21 +111,25 @@ input+input {
 }
 
 .A {
-  color: purple;
+  background-color: purple;
+  color: #fff;
   border: solid 1px purple;
 }
 
 .C {
-  color: red;
+  background-color: red;
+  color: #fff;
   border: solid 1px red;
 }
 
 .G {
-  color: blue;
+  background-color: blue;
+  color: #fff;
   border: solid 1px blue;
 }
 
 .T {
-  color: green;
+  background-color: green;
+  color: #fff;
   border: solid 1px green;
 }

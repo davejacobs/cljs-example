@@ -10,12 +10,12 @@
 
 (def input-type-mappings
   {"text" str
-   "number" int})
+   "integer" int})
 
 (defn form-value-for-name [form-element k]
   (let [input-elem (-> ($ form-element) 
                      (jq/find (<< "[name=~{k}]")))
-        input-type (jq/attr input-elem "type")
+        input-type (jq/data input-elem "typeclass")
         input-val (jq/val input-elem)
         output-type (get input-type-mappings input-type str)]
     (output-type input-val)))
@@ -37,3 +37,13 @@
   (let [kv-pairs (for [field fields]
                    [field (form-value-for-name form (name field))])]
     (into {} kv-pairs)))
+
+;; Stolen from https://stackoverflow.com/questions/15223942/clojure-sub-sequence-position-in-sequence
+;; because I'm lazy
+(defn find-pos
+  [sq sub]
+  (->>
+    (partition (count sub) 1 sq)
+    (map-indexed vector)
+    (filter #(= (second %) sub))
+    (map first)))
