@@ -2,17 +2,6 @@ ul {
   list-style-type: none;
 }
 
-li {
-  display: inline-block;
-  font-family: "Ubuntu Mono";
-  text-align: center;
-  width: 20px;
-  line-height: 20px;
-  margin-left: 5px;
-  margin-top: 5px;
-  border-radius: 10px;
-}
-
 html, body { 
   height: 100vh; 
 }
@@ -45,11 +34,6 @@ body {
   min-height: 0;
 }
 
-.sequences li.highlighted {
-  background-color: #fff;
-  color: #666;
-}
-
 .pause-fetch {
   display: block;
   padding: 10px;
@@ -76,18 +60,23 @@ form.fetch-sequences {
   overflow-x: scroll;
 }
 
-form.fetch-sequences .flexible-fields {
+form.fetch-sequences .flexible-fields, form.search-sequences .flexible-fields {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
 }
 
-form.fetch-sequences input[type=submit] {
+form.fetch-sequences input[type=submit], form.search-sequences input[type=submit] {
   display: block;
   margin-top: 20px;
   font-size: 150%;
   margin-left: auto;
   margin-right: auto;
+}
+
+form.search-sequences input[type=text] {
+  text-transform: uppercase;
+  text-align: center;
 }
 
 input:focus {
@@ -108,6 +97,18 @@ input[type=text] {
 
 input+input {
   margin-top: 10px;
+}
+
+.nucleotide {
+  font-size: 130%;
+  display: inline-block;
+  font-family: "Ubuntu Mono";
+  text-align: center;
+  width: 25px;
+  line-height: 25px;
+  margin-left: 5px;
+  margin-top: 5px;
+  border-radius: 13px;
 }
 
 .A {
@@ -133,3 +134,9 @@ input+input {
   color: #fff;
   border: solid 1px green;
 }
+
+.nucleotide.highlighted {
+  background-color: #fff;
+  color: #666;
+}
+

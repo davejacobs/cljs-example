@@ -30,7 +30,7 @@
 
 (deftemplate nucleotide-templ [base]
   [:li
-   {:class base}
+   {:classes [base "nucleotide"]}
    base])
 
 (defn nucleotides-templ [sequence]
