@@ -123,7 +123,7 @@
         search-val (h/form-value-for-name form "search-sequence")
         search-seq (seq (upper-case search-val))]
     (render-search-sequence! search-seq)
-    (-> ($ form) (jq/find "[name=search-sequence]") (jq/val "") (jq/focus))))
+    #_(-> ($ form) (jq/find "[name=search-sequence]") (jq/val "") (jq/focus))))
 
 (defn on-pause-fetch [e]
   (jq/prevent e)
