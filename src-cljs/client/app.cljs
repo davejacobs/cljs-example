@@ -47,10 +47,11 @@
     (apply dommy/append! elem (nucleotides-templ seq-diff))))
 
 (defn insert-sequence! [identifier new-seq]
-  (let [identifier-name (name identifier)]
+  (let [identifier-name (name identifier)
+        sequence (sequence-templ identifier-name)]
     (-> (sel1 ".sequences")
-      (dommy/append! (sequence-templ identifier-name)))
-    (-> (sel1 ".pause-fetch")
+      (dommy/append! sequence))
+    (-> (sel1 sequence ".pause-fetch")
       (dommy/listen! :click on-pause-fetch))
     (update-sequence! identifier [] new-seq)))
 
