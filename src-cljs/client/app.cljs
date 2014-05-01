@@ -3,12 +3,15 @@
             [clojure.string :refer [upper-case]]
             [cljs.core.async :refer [<! >! put! close! timeout]]
             [chord.client :refer [ws-ch]]
-            [jayq.core :refer [$ css html] :as jq]
+            ;; For jQuery interop
+            ; [jayq.core :refer [$ css html] :as jq]
             [dommy.core :as dommy])
   (:require-macros [cljs.core.async.macros :refer [go]]
                    [clojure.core.strint :refer [<<]]
                    [dommy.macros :refer [deftemplate node sel sel1]] 
                    [jayq.macros :refer [ready]]))
+
+(declare on-pause-fetch)
 
 (def counter
   (atom 0))
@@ -40,16 +43,15 @@
 (defn update-sequence! [identifier old-seq new-seq]
   (let [identifier-name (name identifier)
         seq-diff (drop (count old-seq) new-seq)
-        elem ($ (<< ".~{identifier-name}"))]
-    (doseq [nucleotide (nucleotides-templ seq-diff)]
-      (jq/append elem nucleotide))))
+        elem (sel1 (<< ".~{identifier-name}"))]
+    (apply dommy/append! elem (nucleotides-templ seq-diff))))
 
 (defn insert-sequence! [identifier new-seq]
   (let [identifier-name (name identifier)]
-    (-> ($ ".sequences")
-      (jq/append (sequence-templ identifier-name)))
-    (-> ($ ".pause-fetch")
-      (jq/on :click on-pause-fetch))
+    (-> (sel1 ".sequences")
+      (dommy/append! (sequence-templ identifier-name)))
+    (-> (sel1 ".pause-fetch")
+      (dommy/listen! :click on-pause-fetch))
     (update-sequence! identifier [] new-seq)))
 
 (defn render! [old-state new-state]
@@ -65,9 +67,10 @@
           highlight-len (count search-sequence)] 
       (doseq [initial-pos search-positions
               distance (range highlight-len)]
-        (-> ($ (<< ".~{identifier-name} > li"))
-          (.eq (+ initial-pos distance))
-          (jq/add-class "highlighted"))))))
+        (-> (sel (<< ".~{identifier-name} > li"))
+          (get (+ initial-pos distance))
+          (#(node %))
+          (dommy/add-class! "highlighted"))))))
  
 (defn start-loading-data! [query]
   ;; Bump the counter
@@ -94,39 +97,39 @@
     (start-loading-data! query)))
 
 (defn on-fetch-sequences [e]
-  (jq/prevent e)
+  (.preventDefault e)
   (let [form (.-currentTarget e)
         fields [:species-id :chromosome :start-pos :len]]
     (h/save-form-to-cookie! form fields)
     (start-loading-data-from-form! form fields)))
 
 (defn on-search-sequences [e]
-  (jq/prevent e)
+  (.preventDefault e)
   (let [form (.-currentTarget e)
         search-val (h/form-value-for-name form "search-sequence")
         search-seq (seq (upper-case search-val))]
-    (render-search-sequence! search-seq)
-    #_(-> ($ form) (jq/find "[name=search-sequence]") (jq/val "") (jq/focus))))
+    (render-search-sequence! search-seq)))
 
 (defn on-pause-fetch [e]
-  (jq/prevent e)
-  (let [target ($ (.-target e))
-        identifier (keyword (jq/data target "identifier"))]
+  (.preventDefault e)
+  (let [target (.-target e)
+        identifier (keyword (dommy/attr target "data-identifier"))]
     (swap! reading-state assoc-in [:sequences identifier] false)))
 
 (defn bind-events! []
-  (-> ($ "form.fetch-sequences")
-    (jq/bind :submit on-fetch-sequences))
-  (-> ($ "form.search-sequences")
-    (jq/bind :submit on-search-sequences)))
+  (-> (sel1 "form.fetch-sequences")
+    (dommy/listen! :submit on-fetch-sequences))
+  (-> (sel1 "form.search-sequences")
+    (dommy/listen! :submit on-search-sequences)))
 
-(defn init! []
+(defn init! [& args]
   (enable-console-print!)
-  (h/load-form-from-cookie! ($ "form")
+  (h/load-form-from-cookie! (sel1 "form")
                             ["species-id" "chromosome" "start-pos" "len"])
   (add-watch application-state :app-watcher
              (fn [key reference old-state new-state]
                (render! old-state new-state)))
   (bind-events!))
 
-(jq/document-ready init!)
+(-> js/document
+  (dommy/listen! "DOMContentLoaded" init!))
