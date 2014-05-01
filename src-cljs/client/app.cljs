@@ -113,7 +113,7 @@
 
 (defn on-pause-fetch [e]
   (.preventDefault e)
-  (let [target (.-target e)
+  (let [target (.-currentTarget e)
         identifier (keyword (dommy/attr target "data-identifier"))]
     (swap! reading-state assoc-in [:sequences identifier] false)))
 
