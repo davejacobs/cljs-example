@@ -16,6 +16,8 @@
 (def application-state 
   (atom {:sequences {}}))
 
+;; This is a separate atom right now and keeps track of pause/play
+;; state.
 (def reading-state 
   (atom {:sequences {}}))
 
