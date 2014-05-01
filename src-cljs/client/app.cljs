@@ -70,7 +70,6 @@
               distance (range highlight-len)]
         (-> (sel (<< ".~{identifier-name} > li"))
           (get (+ initial-pos distance))
-          (#(node %))
           (dommy/add-class! "highlighted"))))))
  
 (defn start-loading-data! [query]
