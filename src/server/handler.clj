@@ -55,7 +55,7 @@
   (atom nil))
 
 (def handler 
-  ;; Wrap the handler in any relevant middlware before
+  ;; Wrap the handler in any relevant middleware before
   ;; loading it into the Netty server
   (-> (site all-routes)
     reload/wrap-reload))
