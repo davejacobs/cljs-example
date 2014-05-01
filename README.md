@@ -38,3 +38,4 @@ x I can start multiple data streams at once
 - Try to use monads and CSS animations for controlled, functional state transformations
 - Performance: use larger buffers for sending over sequences
 - Performance: cache sequences
+- Look into a non-React virtual DOM: https://github.com/Matt-Esch/virtual-dom
