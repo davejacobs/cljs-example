@@ -93,25 +93,6 @@
   (let [query (h/form->map form fields)]
     (start-loading-data! query)))
 
-(defn fit-input-width! [input-elem]
-  (let [letter-width 10
-        min-chars 1
-        input-val (str (jq/val input-elem))
-        input-val-len (count input-val)
-        placeholder (-> input-elem (jq/attr "placeholder"))
-        placeholder-len (count placeholder)
-        len (cond
-              (>= input-val-len min-chars) input-val-len
-              (and placeholder (>= placeholder-len min-chars)) placeholder-len
-              :else min-chars)]
-    (jq/width input-elem (* len letter-width))))
-
-(defn on-input-text [e]
-  (let [letter-width 10
-        min-chars 5
-        target ($ (.-target e))]
-    (fit-input-width! target)))
-
 (defn on-fetch-sequences [e]
   (jq/prevent e)
   (let [form (.-currentTarget e)
@@ -137,9 +118,7 @@
   (-> ($ "form.fetch-sequences")
     (jq/bind :submit on-fetch-sequences))
   (-> ($ "form.search-sequences")
-    (jq/bind :submit on-search-sequences))
-  #_(-> ($ "input[type=text]")
-    (jq/bind :keyup on-input-text)))
+    (jq/bind :submit on-search-sequences)))
 
 (defn init! []
   (enable-console-print!)
@@ -148,7 +127,6 @@
   (add-watch application-state :app-watcher
              (fn [key reference old-state new-state]
                (render! old-state new-state)))
-  (bind-events!)
-  #_(fit-input-width! ($ "input[type=text]")))
+  (bind-events!))
 
 (jq/document-ready init!)
