@@ -1,6 +1,6 @@
 (defproject cljs-example "0.1.0"
   :description "This is an example of a Clojurescript app"
-  :url "http://cljs-example.com"
+  :url "http://dna.wit.io"
 
   ;; Clojure and Clojurescript dependencies go here. Find libraries at:
   ;; - http://www.clojure-toolbox.com/
@@ -8,15 +8,12 @@
   ;; - https://github.com/shaunxcode/clojurescript-ecosystem/wiki/libraries 
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/core.incubator "0.1.3"]
-                 ; [org.clojure/clojurescript "0.0-2173"]
-
-                 ;; This version of Clojurescript seems to compile
-                 ;; very slowly -- requires cljsbuild 1.0.3
                  [org.clojure/clojurescript "0.0-2202"]
                  
                  ;; Server, routing
                  [http-kit/http-kit "2.1.16"]
                  [compojure/compojure "1.1.5"]
+                 [om/om "0.6.2"]
 
                  ;; DOM manipulation
                  [prismatic/dommy "0.1.2"]

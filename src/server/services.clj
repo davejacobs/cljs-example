@@ -31,9 +31,14 @@
   ;; << is string interpolation, provided by clojure.incubator
   (let [end-pos (+ start-pos len)
         url (<< "~{base-url}/~{species-id}/~{chromosome}:~{start-pos}..~{end-pos}")
-        resp (http/get url {:headers {"Content-Type" "application/json"}
+        req #(http/get url {:headers {"Content-Type" "application/json"}
                             :throw-exceptions false})
-        body (json/decode (resp :body) true)]
+        body (try 
+               (json/decode ((req) :body) true)
+               (catch java.net.UnknownHostException e
+                 (println "Could not connect to Ensembl...")
+                 (println "Generating random data instead!")
+                 nil))]
     (if body
       {:type :actual-data
        :sequence (body :seq)}

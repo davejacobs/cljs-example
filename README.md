@@ -1,5 +1,5 @@
-Clojurescript example
----------------------
+cljs-dna
+--------
 
 ### Run the code ###
 
