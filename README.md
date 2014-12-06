@@ -1,5 +1,5 @@
-Clojurescript example
----------------------
+dna-cljs: DNA visualization in Clojurescript
+--------------------------------------------
 
 ### Run the code ###
 
@@ -9,6 +9,8 @@ Clojurescript example
     lein serve
 
 ### Todo ###
+
+Note: This is only the beginning of an experiment so far.
 
 #### Features ####
 
