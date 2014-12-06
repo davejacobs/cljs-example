@@ -8,15 +8,6 @@ Clojurescript example
     lein cljsbuild auto
     lein serve
 
-### Notes ###
-
-- Leiningen likes to keep track of state with dotfiles.
-  You may want to add the following to your `~/.gitignore`.
-
-        .lein-repl-history
-        .repl
-        target
-
 ### Todo ###
 
 #### Features ####
@@ -29,13 +20,13 @@ x I can start multiple data streams at once
 - I can destroy streaming panels
 - A blank panel does not show up until I start loading data
 - Searching is dynamic (happens whenever I load new data)
+- I can visually select any range of nucleotides
 
-#### Chores ####
+#### Technical features/chores ####
 
-- Remove jQuery except for plugins
-- Integrate Reagent or Om
-- Any subset of nucleotides is selectable (wrappable in a div)
-- Try to use monads and CSS animations for controlled, functional state transformations
+- Tech debt: Remove jQuery except for plugins
+- Spike: Integrate React+Om
+- SpikeLook into a non-React virtual DOM: https://github.com/Matt-Esch/virtual-dom
+- Spike: Try to use monads and CSS animations for controlled, functional state transformations
 - Performance: use larger buffers for sending over sequences
 - Performance: cache sequences
-- Look into a non-React virtual DOM: https://github.com/Matt-Esch/virtual-dom
