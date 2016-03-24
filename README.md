@@ -10,7 +10,7 @@ dna-cljs: DNA visualization in Clojurescript
 
 ### Todo ###
 
-Note: This is only the beginning of an experiment so far.
+Note: This is only the beginning of an experiment.
 
 #### Features ####
 
